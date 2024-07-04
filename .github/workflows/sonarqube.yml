@@ -32,7 +32,28 @@ jobs:
           export PATH="$HOME/sonar-scanner-4.6.2.2472-linux/bin:$PATH"
 
       - name: Print JAVA_HOME
-        run: echo "JAVA_HOME: $JAVA_HOME"
+        run: |
+          echo "JAVA_HOME: $JAVA_HOME"
 
       - name: Print PATH
-        run: echo "PATH: $PATH"
+        run: |
+          echo "PATH: $PATH"
+
+      - name: Validate SonarScanner Installation
+        run: |
+          sonar-scanner --version
+
+      - name: Run SonarCloud analysis
+        env:
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          sonar-scanner \
+          -Dsonar.projectKey=your_project_key \
+          -Dsonar.organization=your_organization_key \
+          -Dsonar.sources=force-app/main/default \
+          -Dsonar.tests=force-app/main/default \
+          -Dsonar.language=apex \
+          -Dsonar.sourceEncoding=UTF-8 \
+          -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
+          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
