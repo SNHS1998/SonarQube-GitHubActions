@@ -1,4 +1,4 @@
-name: SonarQube Analysis
+name: SonarCloud Analysis
 
 on:
   push:
@@ -11,7 +11,7 @@ on:
 
 jobs:
   sonarqube:
-    name: SonarQube Scan
+    name: SonarCloud Scan
     runs-on: ubuntu-latest
 
     steps:
@@ -22,7 +22,7 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: '11'
-      
+
       - name: Install Salesforce CLI
         run: |
           sudo npm install -g sfdx-cli
@@ -44,13 +44,14 @@ jobs:
         run: |
           sonar-scanner --version
 
-      - name: Run SonarQube analysis
+      - name: Run SonarCloud analysis
         env:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           sonar-scanner \
           -Dsonar.projectKey=your_project_key \
+          -Dsonar.organization=your_organization_key \
           -Dsonar.sources=force-app/main/default \
           -Dsonar.tests=force-app/main/default \
           -Dsonar.language=apex \
