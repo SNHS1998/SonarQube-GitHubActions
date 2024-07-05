@@ -16,9 +16,9 @@ on:
         - synchronize
         - reopened
   
-name: Main Workflow
+  name: Main Workflow
   
-jobs:
+  jobs:
     sonarqube:
       runs-on: ubuntu-latest
       steps:
@@ -42,19 +42,27 @@ jobs:
             SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
   
         - name: Check SonarQube Quality Gate
+          id: quality_gate
           env:
             SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
             SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
           run: |
             status=$(curl -s "${SONAR_HOST_URL}/api/qualitygates/project_status?projectKey=SNHS1998_SonarQube-GitHubActions" -u "${SONAR_TOKEN}:")
-            coverage=$(echo "$status" | jq -r '.projectStatus.conditions[] | select(.metricKey == "coverage") | .actualValue')
+            coverage=$(echo "$status" | jq -r '.projectStatus.conditions[] | select(.metricKey == "new_coverage") | .actualValue')
   
-            echo "Current Coverage: $coverage%"
+            echo "Current New Code Coverage: $coverage%"
   
-            if (( $(echo "$coverage > 80" | bc -l) )); then
-              echo "Code coverage is less than 80%. Failing the build."
+            if (( $(echo "$coverage == null" | bc -l) )); then
+              echo "New code coverage information is not available."
+              exit 1
+            elif (( $(echo "$coverage < 80" | bc -l) )); then
+              echo "New code coverage is less than 80%. Failing the build."
               exit 1
             else
-              echo "Code coverage is sufficient. Proceeding with the build."
+              echo "New code coverage is sufficient. Proceeding with the build."
             fi
+  
+        - name: Fail build on Quality Gate status
+          if: steps.quality_gate.outcome != 'success'
+          run: exit 1
   
