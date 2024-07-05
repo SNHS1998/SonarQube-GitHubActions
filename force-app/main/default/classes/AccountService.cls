@@ -10,7 +10,7 @@ public class AccountService {
         return acc;
     }
     
-    // Method to update an existing Account
+    // Method to update an existing Account for checking 
     public static void updateAccount(Id accountId, String phone, String industry) {
         Account acc = [SELECT Id, Phone, Industry FROM Account WHERE Id = :accountId];
         
