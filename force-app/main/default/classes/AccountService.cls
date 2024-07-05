@@ -47,7 +47,7 @@ public class AccountService {
             acc.Industry = industry;
         }
 
-        // Update the Account and handle DML exceptions
+        // Update the Account and handle DML exceptions checking exception
         try {
             update acc;
         } catch (DmlException e) {
