@@ -74,7 +74,7 @@ public class AccountService {
             throw e;
         }
 
-        // Delete the Account and handle DML exceptions
+        // Delete the Account and handle DML exceptions check code quality 
         try {
             delete acc;
         } catch (DmlException e) {
