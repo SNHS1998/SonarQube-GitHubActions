@@ -6,7 +6,15 @@ on:
         - develop
         - 'releases/**'
     pull_request:
-      types: [opened, synchronize, reopened]
+      branches:
+        - main
+        - master
+        - develop
+        - 'releases/**'
+      types: 
+        - opened
+        - synchronize
+        - reopened
   
   name: Main Workflow
   
@@ -24,7 +32,7 @@ on:
             distribution: 'temurin'
             java-version: '11'
         - name: SonarQube Scan
-          uses: sonarsource/sonarqube-scan-action@v2.3.0 # Replace with the latest version
+          uses: sonarsource/sonarqube-scan-action@v2.1.0 # Replace with the latest version
           env:
             SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
             SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
